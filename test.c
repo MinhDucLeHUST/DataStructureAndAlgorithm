@@ -1,180 +1,61 @@
 #include <stdio.h>
-#include <stdlib.h>
- 
-struct node
-{
-    int info;
-    struct node *ptr;
-}*top,*top1,*temp;
- 
-int topelement();
-void push(int data);
-void pop();
-void empty();
-void display();
-void destroy();
-void stack_count();
-void create();
- 
-int count = 0;
- 
-void main()
-{
-    int no, ch, e;
- 
-    printf("\n 1 - Push");
-    printf("\n 2 - Pop");
-    printf("\n 3 - Top");
-    printf("\n 4 - Empty");
-    printf("\n 5 - Exit");
-    printf("\n 6 - Dipslay");
-    printf("\n 7 - Stack Count");
-    printf("\n 8 - Destroy stack");
- 
-    create();
- 
-    while (1)
-    {
-        printf("\n Enter choice : ");
-        scanf("%d", &ch);
- 
-        switch (ch)
-        {
-        case 1:
-            printf("Enter data : ");
-            scanf("%d", &no);
-            push(no);
-            break;
-        case 2:
-            pop();
-            break;
-        case 3:
-            if (top == NULL)
-                printf("No elements in stack");
-            else
-            {
-                e = topelement();
-                printf("\n Top element : %d", e);
-            }
-            break;
-        case 4:
-            empty();
-            break;
-        case 5:
-            exit(0);
-        case 6:
-            display();
-            break;
-        case 7:
-            stack_count();
-            break;
-        case 8:
-            destroy();
-            break;
-        default :
-            printf(" Wrong choice, Please enter correct choice  ");
-            break;
-        }
+
+// Function to swap two elements in an array
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to partition an array using the Hoare scheme
+int hoarePartition(int arr[], int low, int high) {
+    int pivot = arr[low];  // Choose the first element as the pivot
+    int i = low - 1;
+    int j = high + 1;
+
+    while (1) {
+        do {
+            i++;
+        } while (arr[i] < pivot);
+
+        do {
+            j--;
+        } while (arr[j] > pivot);
+
+        if (i >= j)
+            return j;
+
+        // Swap arr[i] and arr[j]
+        swap(&arr[i], &arr[j]);
     }
 }
- 
-/* Create empty stack */
-void create()
-{
-    top = NULL;
-}
- 
-/* Count stack elements */
-void stack_count()
-{
-    printf("\n No. of elements in stack : %d", count);
-}
- 
-/* Push data into stack */
-void push(int data)
-{
-    if (top == NULL)
-    {
-        top =(struct node *)malloc(1*sizeof(struct node));
-        top->ptr = NULL;
-        top->info = data;
+
+// Function to perform Quick Sort using the Hoare partition scheme
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int p = hoarePartition(arr, low, high);
+        quickSort(arr, low, p);
+        quickSort(arr, p + 1, high);
     }
-    else
-    {
-        temp =(struct node *)malloc(1*sizeof(struct node));
-        temp->ptr = top;
-        temp->info = data;
-        top = temp;
-    }
-    count++;
 }
- 
-/* Display stack elements */
-void display()
-{
-    top1 = top;
- 
-    if (top1 == NULL)
-    {
-        printf("Stack is empty");
-        return;
+
+int main() {
+    int arr[] = {9, 7, 5, 11, 12, 2, 14, 3, 10, 6};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Original Array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
     }
- 
-    while (top1 != NULL)
-    {
-        printf("%d ", top1->info);
-        top1 = top1->ptr;
+    printf("\n");
+
+    quickSort(arr, 0, n - 1);
+
+    printf("Sorted Array: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
     }
- }
- 
-/* Pop Operation on stack */
-void pop()
-{
-    top1 = top;
- 
-    if (top1 == NULL)
-    {
-        printf("\n Error : Trying to pop from empty stack");
-        return;
-    }
-    else
-        top1 = top1->ptr;
-    printf("\n Popped value : %d", top->info);
-    free(top);
-    top = top1;
-    count--;
-}
- 
-/* Return top element */
-int topelement()
-{
-    return(top->info);
-}
- 
-/* Check if stack is empty or not */
-void empty()
-{
-    if (top == NULL)
-        printf("\n Stack is empty");
-    else
-        printf("\n Stack is not empty with %d elements", count);
-}
- 
-/* Destroy entire stack */
-void destroy()
-{
-    top1 = top;
- 
-    while (top1 != NULL)
-    {
-        top1 = top->ptr;
-        free(top);
-        top = top1;
-        // top1 = top1->ptr;
-    }
-    // free(top1);
-    // top = NULL;
- 
-    printf("\n All stack elements destroyed");
-    count = 0;
+    printf("\n");
+
+    return 0;
 }

@@ -1,28 +1,21 @@
+#include "library/libSort.h"
 #include "stdio.h"
 #include "stdlib.h"
 
 void insertionSort(int arraySort[], int sizeArray);
 void selectionSort(int arraySort[], int sizeArray);
-void printArray(int arrayPrint[], int sizeArray);
 void quickSort(int arraySort[], int startIndex, int endIndex);
-int partition(int arraySort[], int startIndex, int endIndex);
-void swap(int* a, int* b);
+void quickSortHoare(int arraySort[], int startIndex, int endIndex);
 
 int main() {
     int arrayNumber[] = {8, 54, 12, 43, 2, 4, 6, 1, 8, 9};
     int sizeArray = sizeof(arrayNumber) / sizeof(arrayNumber[0]);
     printArray(arrayNumber, sizeArray);
     // selectionSort(arrayNumber, sizeArray);
-    quickSort(arrayNumber, 0, sizeArray - 1);
-    // printArray(arrayNumber, sizeArray);
+    // quickSort(arrayNumber, 0, sizeArray - 1);
+    quickSortHoare(arrayNumber, 0, sizeArray - 1);
+    printArray(arrayNumber, sizeArray);
     return 0;
-}
-
-void printArray(int arrayPrint[], int sizeArray) {
-    for (int i = 0; i < sizeArray; i++) {
-        printf("%d ", arrayPrint[i]);
-    }
-    printf("\n");
 }
 
 // Insertion sort
@@ -65,34 +58,18 @@ void selectionSort(int arraySort[], int sizeArray) {
         Hoare partition
 */
 void quickSort(int arraySort[], int startIndex, int endIndex) {
-    if (startIndex >= endIndex) {
-        return;
-    }
+    if (startIndex >= endIndex) return;
+
     // printf("end index value = %d\n", endIndex);
-    int a = partition(arraySort, startIndex, endIndex);
+    int a = partitionLumoto(arraySort, startIndex, endIndex);
     // printf("return value = %d\n", a);
     quickSort(arraySort, startIndex, a - 1);
     quickSort(arraySort, a + 1, endIndex);
 }
 
-int partition(int arraySort[], int startIndex, int endIndex) {
-    int pivot = arraySort[endIndex];
-    int i = startIndex - 1;
-    for (int j = startIndex; j < endIndex; j++) {
-        if (arraySort[j] <= pivot) {
-            ++i;
-            swap(&arraySort[i], &arraySort[j]);
-        }
-    }
-    printf("pivot = %d and endIndex = %d\n", pivot, arraySort[endIndex]);
-    swap(&arraySort[i + 1], &arraySort[endIndex]);
-    // swap(&arraySort[i + 1], &pivot);
-    printArray(arraySort, endIndex + 1);
-    return i + 1;  // return patition position
-}
-
-void swap(int* a, int* b) {
-    int t = *a;
-    *a = *b;
-    *b = t;
+void quickSortHoare(int arraySort[], int startIndex, int endIndex) {
+    if (startIndex >= endIndex) return;
+    int a = partitionHoare(arraySort, startIndex, endIndex);
+    quickSortHoare(arraySort, startIndex, a);
+    quickSortHoare(arraySort, a + 1, endIndex);
 }

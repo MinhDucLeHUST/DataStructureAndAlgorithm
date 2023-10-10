@@ -1,5 +1,8 @@
 {
   "files.associations": {
-    "stdio.h": "c"
+    "*.json": "jsonc",
+    "stdio.h": "c",
+    "libsort.h": "c",
+    "stdlib.h": "c"
   }
 }
