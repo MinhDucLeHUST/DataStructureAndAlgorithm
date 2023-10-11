@@ -10,9 +10,21 @@ void swap(int* a, int* b) {
     *b = t;
 }
 
+int returnSizeArray(int* arrayGetSize[]) {
+    int sizeReturn = sizeof(&arrayGetSize) / sizeof(&arrayGetSize[0]);
+    return sizeReturn;
+}
+
 void printArray(int arrayPrint[], int sizeArray) {
     for (int i = 0; i < sizeArray; i++) {
         printf("%d ", arrayPrint[i]);
+    }
+    printf("\n");
+}
+
+void printArrayPointer(int* arrayPrint[], int sizeArray) {
+    for (int i = 0; i < sizeArray; i++) {
+        printf("%d ", *arrayPrint[i]);
     }
     printf("\n");
 }
