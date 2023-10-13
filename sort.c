@@ -6,17 +6,18 @@ void insertionSort(int arraySort[], int sizeArray);
 void selectionSort(int arraySort[], int sizeArray);
 void quickSortLumoto(int arraySort[], int startIndex, int endIndex);
 void quickSortHoare(int arraySort[], int startIndex, int endIndex);
-int* mergeSort(int arraySort[], int startIndex, int endIndex);
+void mergeSort(int arraySort[], int startIndex, int endIndex);
+// int* merge(int* arrayHalfStart[], int* arrayHalfEnd[]);
 
 int main() {
     int arrayNumber[] = {8, 54, 12, 43, 2, 4, 6, 1, 8, 9};
     int sizeArray = sizeof(arrayNumber) / sizeof(arrayNumber[0]);
-    printf("Original array: ");
+    printf("*Original array: \n");
     printArray(arrayNumber, sizeArray);
     // printf("sizeArray = %d")
-    int* arrayResult = mergeSort(arrayNumber, 0, sizeArray - 1);
-    printf("Sorted array: ");
-    printArrayPointer(&arrayResult, sizeArray);
+    mergeSort(arrayNumber, 0, sizeArray - 1);
+    printf("*Sorted array: \n");
+    printArray(arrayNumber, sizeArray);
     return 0;
 }
 
@@ -84,49 +85,53 @@ void quickSortHoare(int arraySort[], int startIndex, int endIndex) {
     Tham khảo: https://www.youtube.com/watch?v=CEkAzOUa2mw
 */
 
-int* mergeSort(int arraySort[], int startIndex, int endIndex) {
-    if (startIndex > endIndex) {
-        return 0;
-    } else if (startIndex == endIndex) {
-        int* returnValue = &arraySort[endIndex];
-        return returnValue;
+void mergeSort(int arraySort[], int startIndex, int endIndex) {
+    if (startIndex >= endIndex) {
+        return;
     }
     int sizeArray = startIndex + endIndex;
-    printf(">>>> size of array = %d\n", sizeArray);
-    // int* returnArray = (int*)malloc(sizeArray * sizeof(int));
 
     // Detach array
     int midIndex = sizeArray / 2;
-    printf("Detach %d with %d\n", startIndex, endIndex);
-    int* halfStart = mergeSort(arraySort, startIndex, midIndex);
-    int* halfEnd = mergeSort(arraySort, midIndex + 1, endIndex);
+    mergeSort(arraySort, startIndex, midIndex);
+    mergeSort(arraySort, midIndex + 1, endIndex);
 
     // Sort child array and merge
-    int sizeMerge = returnSizeArray(&halfStart) + returnSizeArray(&halfEnd);
-    int* resultArray = (int*)malloc(sizeMerge * sizeof(int));
-    int indexResult = 0, indexHalfStart = 0, indexHalfEnd = 0;
-    while (indexResult < sizeMerge) {
-        if (indexHalfStart < returnSizeArray(&halfStart) && indexHalfEnd < returnSizeArray(&halfEnd)) {  // check halfStart and halfEnd's array is empty?
-            if (halfStart[indexHalfStart] < halfEnd[indexHalfEnd]) {
-                resultArray[indexResult] = halfStart[indexHalfStart];
-                indexResult++;
-                indexHalfStart++;
-            } else {
-                resultArray[indexResult] = halfStart[indexHalfEnd];
-                indexResult++;
-                indexHalfEnd++;
-            }
-        } else {  // one of them is empty
-            if (indexHalfStart < returnSizeArray(&halfStart)) {
-                resultArray[indexResult] = halfStart[indexHalfStart];
-                indexResult++;
-                indexHalfStart++;
-            } else if (indexHalfEnd < returnSizeArray(&halfEnd)) {
-                resultArray[indexResult] = halfStart[indexHalfEnd];
-                indexResult++;
-                indexHalfEnd++;
-            }
-        }
+    int indexHalfStart = midIndex - startIndex + 1;
+    int indexHalfEnd = endIndex - midIndex;
+
+    int *arrayHalfStart = (int *)malloc(indexHalfStart * sizeof(int));
+    int *arrayHalfEnd = (int *)malloc(indexHalfEnd * sizeof(int));
+
+    // int arrayHalfEnd[indexHalfEnd];
+    for (int i = 0; i < indexHalfStart; i++) {
+        arrayHalfStart[i] = arraySort[startIndex + i];
     }
-    return resultArray;
+    for (int i = 0; i < indexHalfEnd; i++) {
+        arrayHalfEnd[i] = arraySort[midIndex + i + 1];
+    }
+
+    int indexResult = startIndex;  // // gán như vậy để arrayResult được gán giá trị đúng index position
+    int i = 0, j = 0;
+    while (i < indexHalfStart && j < indexHalfEnd) {  // check arrayHalfStart and arrayHalfEnd's array is empty?
+        if (arrayHalfStart[i] <= arrayHalfEnd[j]) {
+            arraySort[indexResult] = arrayHalfStart[i];
+            i++;
+        } else {
+            arraySort[indexResult] = arrayHalfEnd[j];
+            j++;
+        }
+        indexResult++;
+    }
+    // one of them is empty
+    while (i < indexHalfStart) {
+        arraySort[indexResult] = arrayHalfStart[i];
+        indexResult++;
+        i++;
+    }
+    while (j < indexHalfEnd) {
+        arraySort[indexResult] = arrayHalfEnd[j];
+        indexResult++;
+        j++;
+    }
 }

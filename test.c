@@ -1,61 +1,139 @@
-#include <stdio.h>
+#include "library/libSort.h"
+#include "stdio.h"
+#include "stdlib.h"
 
-// Function to swap two elements in an array
-void swap(int* a, int* b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-// Function to partition an array using the Hoare scheme
-int hoarePartition(int arr[], int low, int high) {
-    int pivot = arr[low];  // Choose the first element as the pivot
-    int i = low - 1;
-    int j = high + 1;
-
-    while (1) {
-        do {
-            i++;
-        } while (arr[i] < pivot);
-
-        do {
-            j--;
-        } while (arr[j] > pivot);
-
-        if (i >= j)
-            return j;
-
-        // Swap arr[i] and arr[j]
-        swap(&arr[i], &arr[j]);
-    }
-}
-
-// Function to perform Quick Sort using the Hoare partition scheme
-void quickSort(int arr[], int low, int high) {
-    if (low < high) {
-        int p = hoarePartition(arr, low, high);
-        quickSort(arr, low, p);
-        quickSort(arr, p + 1, high);
-    }
-}
+void insertionSort(int arraySort[], int sizeArray);
+void selectionSort(int arraySort[], int sizeArray);
+void quickSortLumoto(int arraySort[], int startIndex, int endIndex);
+void quickSortHoare(int arraySort[], int startIndex, int endIndex);
+void mergeSort(int arr[], int startIndex, int endIndex);
+// int* merge(int* arrayHalfStart[], int* arrayHalfEnd[]);
 
 int main() {
-    int arr[] = {9, 7, 5, 11, 12, 2, 14, 3, 10, 6};
-    int n = sizeof(arr) / sizeof(arr[0]);
-
-    printf("Original Array: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
-
-    quickSort(arr, 0, n - 1);
-
-    printf("Sorted Array: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
-    }
-    printf("\n");
-
+    int arrayNumber[] = {8, 54, 12, 43, 2, 4, 6, 1, 8, 9};
+    int sizeArray = sizeof(arrayNumber) / sizeof(arrayNumber[0]);
+    printf("*Original array: \n");
+    printArray(arrayNumber, sizeArray);
+    // printf("sizeArray = %d")
+    mergeSort(arrayNumber, 0, sizeArray - 1);
+    printf("*Sorted array: \n");
+    printArray(arrayNumber, sizeArray);
     return 0;
+}
+
+// Insertion sort
+void insertionSort(int arraySort[], int sizeArray) {
+    for (int i = 1; i < sizeArray; i++) {
+        int compNum = arraySort[i];
+        int j = i - 1;
+        while (j >= 0 && arraySort[j] > compNum) {
+            arraySort[j + 1] = arraySort[j];
+            j--;
+        }
+        arraySort[j + 1] = compNum;
+        printArray(arraySort, sizeArray);
+    }
+}
+
+// Selection sort
+void selectionSort(int arraySort[], int sizeArray) {
+    int minIndex = 0;
+    for (int i = 0; i < sizeArray - 1; i++) {
+        minIndex = i;
+        // find min index in unsorted array
+        for (int j = i + 1; j < sizeArray; j++) {
+            if (arraySort[j] < arraySort[minIndex]) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            int temp = arraySort[i];
+            arraySort[i] = arraySort[minIndex];
+            arraySort[minIndex] = temp;
+        }
+        printArray(arraySort, sizeArray);
+    }
+}
+
+/*
+    Quick sort:
+        Lumoto partition: chọn phần tử cuối cùng của 1 dãy làm pivot, ta cho quét dãy số từ đầu đến phần tử n-1 của array,
+                        sau đấy dựa vào điều kiện để swap giá trị sao cho sắp xếp theo đúng ý muốn của người dùng
+        Hoare partition: lựa chọn phần tử làm pivot có thể đứng đầu, đứng giữa or cuối. sử dụng 2 phần tử để chạy từ đầu
+                        và chạy từ cuối lên, sắp xếp theo ý muốn người dùng
+    Tham khảo: https://www.youtube.com/watch?v=eT9Epyf0XLM&t=1829s
+*/
+void quickSortLumoto(int arraySort[], int startIndex, int endIndex) {
+    if (startIndex >= endIndex) return;
+
+    // printf("end index value = %d\n", endIndex);
+    int a = partitionLumoto(arraySort, startIndex, endIndex);
+    // printf("return value = %d\n", a);
+    quickSortLumoto(arraySort, startIndex, a - 1);
+    quickSortLumoto(arraySort, a + 1, endIndex);
+}
+
+void quickSortHoare(int arraySort[], int startIndex, int endIndex) {
+    if (startIndex >= endIndex) return;
+    int a = partitionHoare(arraySort, startIndex, endIndex);
+    quickSortHoare(arraySort, startIndex, a);
+    quickSortHoare(arraySort, a + 1, endIndex);
+}
+
+/*
+    Thuật toán merge sort chia đổi array thành các array nhỏ hơn, sao cho chỉ còn 1 phần tử, sau đấy sắp xếp chúng rồi ghép lại để được 1 array như ý.
+    Tham khảo: https://www.youtube.com/watch?v=CEkAzOUa2mw
+*/
+
+void mergeSort(int arr[], int startIndex, int endIndex) {
+    if (startIndex >= endIndex) {
+        return;
+    }
+    // Find the middle point
+    int midIndex = startIndex + (endIndex - startIndex) / 2;
+
+    // Sort first and second halves
+    mergeSort(arr, startIndex, midIndex);
+    mergeSort(arr, midIndex + 1, endIndex);
+
+    // Merge the sorted halves
+    int i, j, k;
+    int indexHalfStart = midIndex - startIndex + 1;
+    int indexHalfEnd = endIndex - midIndex;
+
+    // Create temporary arrays
+
+    int *arrayHalfStart = (int *)malloc(indexHalfStart * sizeof(int));
+    int *arrayHalfEnd = (int *)malloc(indexHalfEnd * sizeof(int));
+
+    for (i = 0; i < indexHalfStart; i++)
+        arrayHalfStart[i] = arr[startIndex + i];
+    for (j = 0; j < indexHalfEnd; j++)
+        arrayHalfEnd[j] = arr[midIndex + 1 + j];
+    printArray(arrayHalfStart, indexHalfStart);
+    printArray(arrayHalfEnd, indexHalfEnd);
+    i = 0;
+    j = 0;
+    k = startIndex;
+    while (i < indexHalfStart && j < indexHalfEnd) {
+        if (arrayHalfStart[i] <= arrayHalfEnd[j]) {
+            arr[k] = arrayHalfStart[i];
+            i++;
+        } else {
+            arr[k] = arrayHalfEnd[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < indexHalfStart) {
+        arr[k] = arrayHalfStart[i];
+        i++;
+        k++;
+    }
+    while (j < indexHalfEnd) {
+        arr[k] = arrayHalfEnd[j];
+        j++;
+        k++;
+    }
 }
