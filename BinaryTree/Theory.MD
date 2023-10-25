@@ -24,3 +24,20 @@
   So sánh addNode với root, sau đấy so sánh với các child node: left & right
   => nhỏ hơn thì nhảy sang trái, lớn hơn thì nhảy sang phải
   => đến khi nào gặp node null => gán giá trị = addNode
+  \*Có 2 cách để thêm 1 node vào BST: dùng vòng lặp hoặc dùng đệ quy
+
+### Xóa node trên cây
+
+\*Xác đinh node cần xóa, gọi là: removeNode
+
+- TH1: removeNode không có node con (node lá)
+  Tìm node cha của nó và trỏ node cha vào NULL
+- TH2: removeNode có 1 node con
+  Xác định node cha của removeNode, trỏ node cha vào node con của removeNode
+- TH3: removeNode có 2 node con
+  Method 1: thay bởi node trái cùng của cây con bên phải => pp này mục đích tìm được giá trị nào nhỏ hơn các node bên phải (của node bị xóa) và lớn hơn các node bên trái.
+  Method 2: thay bởi node phải cùng của cây con bên trái
+
+### Tìm node trên cây
+
+- Thực hiện tìm node như cách tìm 1 node để tiến hành xóa.

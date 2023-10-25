@@ -1,8 +1,15 @@
-#ifndef __LIB_SORT_H
-#define __LIB_SORT_H
+#ifndef __LIB_BST_H
+#define __LIB_BST_H
 
 #include "stdio.h"
 #include "stdlib.h"
+
+// struct TreeNode* createNode(int value);
+// struct TreeNode* insertNode(struct TreeNode* root, int valueInsert);
+// void insertNodeUsingLoop(struct TreeNode* tempNode, int valueInsert);
+// void insertNodeUsignRecursive(struct TreeNode* root, int valueInsert);
+// struct TreeNode* findMostLeftNode(struct TreeNode* root);
+// struct TreeNode* findMostRightNode(struct TreeNode* root);
 
 struct TreeNode {
     int value;
@@ -23,6 +30,14 @@ void printTree(struct TreeNode* root, int spaces) {
     printf("%d\n", root->value);
 
     printTree(root->leftNode, spaces);
+}
+
+void inorder(struct TreeNode* root) {
+    if (root != NULL) {
+        inorder(root->leftNode);
+        printf("%d ", root->value);
+        inorder(root->rightNode);
+    }
 }
 
 #endif

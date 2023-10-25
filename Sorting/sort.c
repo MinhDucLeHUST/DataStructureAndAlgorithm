@@ -1,4 +1,4 @@
-#include "library/libSort.h"
+#include "../library/libSort.h"
 #include "stdio.h"
 #include "stdlib.h"
 
