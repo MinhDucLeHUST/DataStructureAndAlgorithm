@@ -41,3 +41,11 @@
 ### Tìm node trên cây
 
 - Thực hiện tìm node như cách tìm 1 node để tiến hành xóa.
+
+### Duyệt cây
+
+\*Có 3 cách duyệt cây
+
+- 1: Pre-order Traversal: Node -> L -> R
+- 2: In-order Traversal: L -> Node -> R
+- 3: Post-order Traversal: L -> R -> Node

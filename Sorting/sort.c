@@ -2,20 +2,23 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+/*Declare the function used*/
 void insertionSort(int arraySort[], int sizeArray);
 void selectionSort(int arraySort[], int sizeArray);
 void quickSortLumoto(int arraySort[], int startIndex, int endIndex);
 void quickSortHoare(int arraySort[], int startIndex, int endIndex);
 void mergeSort(int arraySort[], int startIndex, int endIndex);
-// int* merge(int* arrayHalfStart[], int* arrayHalfEnd[]);
+void countingSort(int arraySort[], int sizeArray);
+int findMaxElementInArray(int arraySort[], int sizeArray);
 
 int main() {
-    int arrayNumber[] = {8, 54, 12, 43, 2, 4, 6, 1, 8, 9};
+    int arrayNumber[] = {8, 54, 12, 43, 62, 48, 16, 1, 8, 9};
     int sizeArray = sizeof(arrayNumber) / sizeof(arrayNumber[0]);
     printf("*Original array: \n");
     printArray(arrayNumber, sizeArray);
     // printf("sizeArray = %d")
-    mergeSort(arrayNumber, 0, sizeArray - 1);
+    // mergeSort(arrayNumber, 0, sizeArray - 1);
+    countingSort(arrayNumber, sizeArray);
     printf("*Sorted array: \n");
     printArray(arrayNumber, sizeArray);
     return 0;
@@ -134,4 +137,48 @@ void mergeSort(int arraySort[], int startIndex, int endIndex) {
         indexResult++;
         j++;
     }
+}
+
+/*
+    Counting sort: thuật toán đếm sự xuất hiện của từng phần tử trong mảng 'arraySort'.
+        B1: chúng ta xác định giá trị lớn nhất trong mảng, từ đó khoang vùng được kích thước của mảng 'arrayIndex'
+            khởi tạo tất cả các giá trị của mảng bằng 0
+        B2: đẩy các giá trị của arraySort vào vị trí tương ứng với giá trị của nó trong arrayIndex
+        B3: cộng giá trị của phần tử đứng trước vào phần tử đứng sau, arrayIndex[i] += arrayIndex[i-1]
+        B4: gán giá trị của arrayOutput theo vị trí và giá trị của 2 mảng trên, việc khởi tạo thêm arrayOutput vì chúng ta cần phải sử dụng tới arraySort
+        B5: gán lại giá trị từ arrayOutput vào arraySort
+*/
+void countingSort(int arraySort[], int sizeArray) {
+    // B1
+    int sizeOfArrayIndex = findMaxElementInArray(arraySort, sizeArray) + 1;
+    int *arrayIndex = (int *)calloc(sizeOfArrayIndex, sizeof(int));
+    int *arrayOutput = (int *)malloc(sizeArray * sizeof(int));
+    // B2
+    for (int i = 0; i < sizeArray; i++) {
+        arrayIndex[arraySort[i]]++;  // increase value in arrayIndex
+    }
+    // B3
+    for (int i = 1; i < sizeOfArrayIndex; i++) {
+        arrayIndex[i] += arrayIndex[i - 1];
+    }
+    // B4
+    for (int i = sizeArray - 1; i >= 0; i--) {
+        arrayOutput[arrayIndex[arraySort[i]] - 1] = arraySort[i];
+        arrayIndex[arraySort[i]]--;
+    }
+    // B5
+    for (int i = 0; i < sizeArray; i++) {
+        arraySort[i] = arrayOutput[i];
+    }
+}
+
+int findMaxElementInArray(int arraySort[], int sizeArray) {
+    int maxValue = arraySort[0];
+    for (int i = 1; i < sizeArray; i++) {
+        if (maxValue < arraySort[i]) {
+            maxValue = arraySort[i];
+        }
+    }
+    printf("max value = %d\n", maxValue);
+    return maxValue;
 }
