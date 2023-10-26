@@ -2,7 +2,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-struct TreeNode* createNode(int value);
 struct TreeNode* insertNode(struct TreeNode* root, int valueInsert);
 void insertNodeUsingLoop(struct TreeNode* tempNode, int valueInsert);
 void insertNodeUsignRecursive(struct TreeNode* root, int valueInsert);
@@ -10,41 +9,15 @@ struct TreeNode* removeNode(struct TreeNode* root, int valueRemove);
 struct TreeNode* findMostLeftNode(struct TreeNode* root);
 struct TreeNode* findMostRightNode(struct TreeNode* root);
 struct TreeNode* findNode(struct TreeNode* root, int findValue);
+struct TreeNode* postOrderTraversal(struct TreeNode* root);
+struct TreeNode* inOrderTraversal(struct TreeNode* root);
+struct TreeNode* preOrderTraversal(struct TreeNode* root);
 
 int main() {
-    struct TreeNode* root = createNode(25);
-    root->leftNode = createNode(20);
-    root->rightNode = createNode(36);
-
-    root->leftNode->leftNode = createNode(10);
-    root->leftNode->rightNode = createNode(22);
-
-    root->rightNode->leftNode = createNode(30);
-    root->rightNode->rightNode = createNode(40);
-
-    root->leftNode->leftNode->leftNode = createNode(5);
-    root->leftNode->leftNode->rightNode = createNode(12);
-
-    root->rightNode->leftNode->leftNode = createNode(28);
-
-    root->rightNode->rightNode->leftNode = createNode(38);
-    root->rightNode->rightNode->rightNode = createNode(48);
-    // insertNode(root, 19);
-    // root = removeNode(root, 36);
-    root = findNode(root, 5);
-    printTree(root, 0);
-    // inorder(root);
+    struct TreeNode* root = createBinarySearchTree();
+    root = postOrderTraversal(root);
+    // printTree(root, 0);
     return 0;
-}
-
-struct TreeNode* createNode(int value) {
-    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
-    if (newNode) {
-        newNode->value = value;
-        newNode->leftNode = NULL;
-        newNode->rightNode = NULL;
-    }
-    return newNode;
 }
 
 struct TreeNode* insertNode(struct TreeNode* root, int valueInsert) {
@@ -153,4 +126,31 @@ struct TreeNode* findNode(struct TreeNode* root, int findValue) {
         printf("value = %d", root->value);
         return root;
     }
+}
+
+// Traversal
+struct TreeNode* preOrderTraversal(struct TreeNode* root) {
+    if (root == NULL) return NULL;
+
+    printf("%d ", root->value);
+    preOrderTraversal(root->leftNode);
+    preOrderTraversal(root->rightNode);
+
+    return root;
+}
+
+struct TreeNode* inOrderTraversal(struct TreeNode* root) {
+    if (root == NULL) return NULL;
+    inOrderTraversal(root->leftNode);
+    printf("%d ", root->value);
+    inOrderTraversal(root->rightNode);
+    return root;
+}
+
+struct TreeNode* postOrderTraversal(struct TreeNode* root) {
+    if (root == NULL) return NULL;
+    postOrderTraversal(root->leftNode);
+    postOrderTraversal(root->rightNode);
+    printf("%d ", root->value);
+    return root;
 }
