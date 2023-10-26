@@ -1,4 +1,4 @@
-#include "../library/libBinaryTree.h"
+#include "library.h"
 #include "stdio.h"
 #include "stdlib.h"
 

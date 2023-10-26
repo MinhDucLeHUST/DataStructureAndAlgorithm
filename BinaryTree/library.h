@@ -1,15 +1,8 @@
-#ifndef __LIB_BST_H
-#define __LIB_BST_H
+#ifndef __LIBRARY_H
+#define __LIBRARY_H
 
 #include "stdio.h"
 #include "stdlib.h"
-
-// struct TreeNode* createNode(int value);
-// struct TreeNode* insertNode(struct TreeNode* root, int valueInsert);
-// void insertNodeUsingLoop(struct TreeNode* tempNode, int valueInsert);
-// void insertNodeUsignRecursive(struct TreeNode* root, int valueInsert);
-// struct TreeNode* findMostLeftNode(struct TreeNode* root);
-// struct TreeNode* findMostRightNode(struct TreeNode* root);
 
 struct TreeNode {
     int value;
