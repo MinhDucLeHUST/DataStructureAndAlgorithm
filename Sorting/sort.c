@@ -1,7 +1,7 @@
 #include "../library/libSort.h"
 #include "stdio.h"
 #include "stdlib.h"
-
+// add to test commit
 /*Declare the function used*/
 void insertionSort(int arraySort[], int sizeArray);
 void selectionSort(int arraySort[], int sizeArray);
