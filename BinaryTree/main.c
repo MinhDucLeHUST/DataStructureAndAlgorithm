@@ -1,4 +1,5 @@
 #include "library.h"
+#include "stdbool.h"
 #include "stdio.h"
 #include "stdlib.h"
 
@@ -12,10 +13,18 @@ struct TreeNode* findNode(struct TreeNode* root, int findValue);
 struct TreeNode* postOrderTraversal(struct TreeNode* root);
 struct TreeNode* inOrderTraversal(struct TreeNode* root);
 struct TreeNode* preOrderTraversal(struct TreeNode* root);
+int findDepthTree(struct TreeNode* root);
+int calculateSumOfTree(struct TreeNode* root);
+bool isPathReturnCorrectSum(struct TreeNode* root, int currentSum, int desiredValue);
+bool isNodeLeaf(struct TreeNode* root);
 
 int main() {
     struct TreeNode* root = createBinarySearchTree();
-    root = postOrderTraversal(root);
+    if (isPathReturnCorrectSum(root, 0, 60)) {
+        printf("Ok!\n");
+    } else {
+        printf("Fail!\n");
+    }
     // printTree(root, 0);
     return 0;
 }
@@ -153,4 +162,52 @@ struct TreeNode* postOrderTraversal(struct TreeNode* root) {
     postOrderTraversal(root->rightNode);
     printf("%d ", root->value);
     return root;
+}
+
+// Calculate the height of a binary tree
+
+int findDepthTree(struct TreeNode* root) {
+    int depth = 0;
+    if (root == NULL) return 0;
+    int depthLeftNode = findDepthTree(root->leftNode);
+    int depthRightNode = findDepthTree(root->rightNode);
+    if (depthLeftNode > depthRightNode) {
+        return depthLeftNode + 1;
+    } else {
+        return depthRightNode + 1;
+    }
+}
+
+// Sum
+int calculateSumOfTree(struct TreeNode* root) {
+    if (root == NULL) return 0;
+    int sumResult = root->value;
+    sumResult += calculateSumOfTree(root->leftNode);
+    sumResult += calculateSumOfTree(root->rightNode);
+    return sumResult;
+}
+
+/*
+    Find path of sum:
+        + isNodeLeaf() là hàm check Node có phải node lá hay không, đây là node có node trái & phải == NULL.
+        Hay nói cách khác là check xem node này có phải node dưới cùng của 1 path hay không.
+        + isPathReturnCorrectSum() là hàm check xem có đường dẫn trên tree có tổng bằng giá trị mong muốn.
+            @param: currentSum là tổng của 1 đường dẫn trong cây
+                    desiredValue là giá trị mong muốn
+*/
+
+bool isNodeLeaf(struct TreeNode* root) {
+    return root->leftNode == NULL && root->rightNode == NULL;
+}
+
+bool isPathReturnCorrectSum(struct TreeNode* root, int currentSum, int desiredValue) {
+    if (root == NULL) return false;
+    currentSum += root->value;
+    if (isNodeLeaf(root)) {
+        return currentSum == desiredValue;
+    }
+    bool resultNodeLeft = isPathReturnCorrectSum(root->leftNode, currentSum, desiredValue);
+    bool resultNodeRight = isPathReturnCorrectSum(root->rightNode, currentSum, desiredValue);
+
+    return resultNodeLeft || resultNodeRight;
 }
